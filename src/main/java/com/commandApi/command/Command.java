@@ -24,26 +24,19 @@ public class Command {
     private String name;
     private LocalDate creationDate;
     private LocalDate updateDate;
+    private Long clientId;
 
     public Command() {
     }
 
-    public Command(Long id,
-                   String name,
-                   LocalDate creationDate,
-                   LocalDate updateDate) {
-        this.id = id;
-        this.name = name;
-        this.creationDate = creationDate;
-        this.updateDate = updateDate;
-    }
-
     public Command(String name,
                    LocalDate creationDate,
-                   LocalDate updateDate) {
+                   LocalDate updateDate,
+                   Long clientId) {
         this.name = name;
         this.creationDate = creationDate;
         this.updateDate = updateDate;
+        this.clientId = clientId;
     }
 
     public Long getId() {
@@ -52,6 +45,14 @@ public class Command {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
     public String getName() {
@@ -82,10 +83,9 @@ public class Command {
     public String toString() {
         return "Command{" +
                 "id=" + id +
-                ", fristName='" + name + '\'' +
+                ", name='" + name + '\'' +
                 ", creationDate=" + creationDate +
                 ", updateDate=" + updateDate +
                 '}';
     }
 }
-
