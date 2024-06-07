@@ -46,7 +46,7 @@ public class CommandController {
 
 
         //commandService.addNewCommand(command, Long.parseLong(clientId));
-        rabbitMQSender.sendProductsInOrder(command);
+        //rabbitMQSender.sendProductsInOrder(command);
     }
 
     @PutMapping(path = "{commandId}")
@@ -61,9 +61,17 @@ public class CommandController {
     }
 
     @GetMapping("/order-with-client")
-    public Optional<Command> sendOrderWithClient() {
-        String clientIdAndOrderId = (String) rabbitMQReceiver.receiveClientIdAndOrderId();
-        return commandService.getProductsByOrderId(clientIdAndOrderId);
+    public String sendOrderWithClient() {
+        String clientIdAndOrderId = rabbitMQReceiver.getReceivedMessage();
+        if (clientIdAndOrderId != null) {
+            String[] ids = clientIdAndOrderId.split(",");
+            //Long clientId = Long.parseLong(ids[0]);
+            //Long orderId = Long.parseLong(ids[1]);
+            System.out.println("bingo");
+            return clientIdAndOrderId + " bingo" ;
+        } else {
+            return null;
+        }
     }
 
 

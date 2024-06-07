@@ -8,15 +8,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class RabbitMQReceiver {
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private String receivedMessage;
 
     @RabbitListener(queues = "orderProductQueue")
-    public Object receiveClientIdAndOrderId() {
-        Object response = rabbitTemplate.receive("orderProductQueue");
-        System.out.println("Received message: " + response);
-        // Process the message as needed
-        return response;
+    public void receiveMessage(String message) {
+        this.receivedMessage = message;
+        // Traitez le message ici
+        //String[] ids = message.split(",");
+        try {
+            System.out.println(message + " good");
+            /*
+            Long clientId = Long.parseLong(ids[0]);
+
+
+            System.out.println(clientId);
+            System.out.println("*****************");
+            Long orderId = Long.parseLong(ids[1]);
+            // Vous pouvez maintenant utiliser clientId et orderId comme vous le souhaitez
+            System.out.println("ClientId: " + clientId + ", OrderId: " + orderId);*/
+        } catch (NumberFormatException e) {
+            // Gérer l'erreur de parsing
+            System.err.println("Erreur de parsing des IDs : " + e.getMessage());
+        }
+    }
+
+    public String getReceivedMessage() {
+        return this.receivedMessage;
     }
 }
+
 

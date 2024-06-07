@@ -14,12 +14,7 @@ public class RabbitMQSender {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    public void sendProductsInOrder(Command command) {
-        //String orderDetails = commandService.sendProducts();
-        rabbitTemplate.convertAndSend(RabbitMQConfig.RESPONSE_QUEUE_NAME, command);
-    }
-
-    public void sendToOrderProductQueue(String message) {
-        rabbitTemplate.convertAndSend(RabbitMQConfig.ORDER_PRODUCT_QUEUE_NAME, message);
+    public void sendOrderToClient(String order) {
+        rabbitTemplate.convertAndSend("orderToSendQueue", order);
     }
 }

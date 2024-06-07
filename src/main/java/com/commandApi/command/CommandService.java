@@ -1,6 +1,9 @@
 package com.commandApi.command;
 
+import com.commandApi.config.RabbitMQReceiver;
 import com.commandApi.config.RabbitMQSender;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,12 @@ public class CommandService {
 
     @Autowired
     RabbitMQSender rabbitMQSender;
+
+    @Autowired
+    RabbitMQReceiver rabbitMQReceiver;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     public CommandService(CommandRepository commandRepository) {
@@ -79,6 +88,23 @@ public class CommandService {
         // Logique pour envoyer les produits via RabbitMQ ou autre moyen de communication
         return products;
     }
+
+    public String commandOfASpecificClient() {
+        String orderIdReceived = rabbitMQReceiver.getReceivedMessage();
+        Long orderIdReceivedLongFormat = Long.parseLong(orderIdReceived);
+        Command command = commandRepository.findById(orderIdReceivedLongFormat)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Command with id " + orderIdReceivedLongFormat + " does not exist"));
+
+        try {
+            String commandJson = objectMapper.writeValueAsString(command);
+            rabbitMQSender.sendOrderToClient(commandJson);
+            return commandJson;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error converting command to JSON", e);
+        }
+    }
+
 
     public Optional<Command> getProductsByOrderId(String ids) {
         String[] idArray = ids.split(",");
