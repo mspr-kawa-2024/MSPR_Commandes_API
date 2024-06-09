@@ -60,6 +60,7 @@ public class CommandController {
         commandService.deleteCommand(commandId);
     }
 
+    /*
     @GetMapping("/order-with-client")
     public String sendOrderWithClient() {
         String clientIdAndOrderId = rabbitMQReceiver.getReceivedMessage();
@@ -72,7 +73,7 @@ public class CommandController {
         } else {
             return null;
         }
-    }
+    }*/
 
 
 }

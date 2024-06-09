@@ -28,7 +28,7 @@ public class CommandConfig {
                     "command2",
                     LocalDate.of(2023, Month.DECEMBER, 1),
                     LocalDate.of(2024, Month.JANUARY, 31),
-                    2L
+                    1L
             );
 
             // Save Clients into Database

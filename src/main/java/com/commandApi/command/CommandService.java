@@ -131,5 +131,21 @@ public class CommandService {
         return products;
     }
 
+    @RabbitListener(queues = "orderQueue")
+    public void handleOrderRequest(String orderId) {
+        Long orderIdReceivedLongFormat = Long.parseLong(orderId);
+        Command command = commandRepository.findById(orderIdReceivedLongFormat)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Command with id " + orderIdReceivedLongFormat + " does not exist"));
+
+        try {
+            String commandJson = objectMapper.writeValueAsString(command);
+            rabbitMQSender.sendOrderToClient(commandJson);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error converting command to JSON", e);
+        }
+    }
+
+
 
 }
