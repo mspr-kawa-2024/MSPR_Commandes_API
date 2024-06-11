@@ -8,14 +8,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class RabbitMQReceiver {
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     private String receivedMessage;
 
-    @RabbitListener(queues = "orderProductQueue")
-    public void receiveMessage(String message) {
+    @RabbitListener(queues = "productToSendQueue")
+    public void receiveProductOfOrder(String message) {
         this.receivedMessage = message;
-        try {
-        } catch (NumberFormatException e) {
-        }
+        System.out.println(message + " good");
     }
 
     public String getReceivedMessage() {

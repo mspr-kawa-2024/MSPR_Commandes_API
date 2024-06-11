@@ -21,14 +21,16 @@ public class CommandConfig {
                     "command1",
                     LocalDate.of(2023, Month.DECEMBER, 1),
                     LocalDate.of(2024, Month.JANUARY, 31),
-                    1L
+                    "1,2",
+                    "1,2,3"
             );
 
             Command command2 = new Command(
                     "command2",
                     LocalDate.of(2023, Month.DECEMBER, 1),
                     LocalDate.of(2024, Month.JANUARY, 31),
-                    1L
+                    "1",
+                    "3"
             );
 
             // Save Clients into Database

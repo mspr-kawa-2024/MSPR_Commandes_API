@@ -44,8 +44,8 @@ public class CommandService {
     }
 
 
-    public void addNewCommand(Command command, Long clientId) {
-        command.setClientId(clientId);
+    public void addNewCommand(Command command, String clientsId) {
+        command.setClientsId(clientsId);
         commandRepository.save(command);
     }
 
@@ -89,48 +89,6 @@ public class CommandService {
         return products;
     }
 
-    public String commandOfASpecificClient() {
-        String orderIdReceived = rabbitMQReceiver.getReceivedMessage();
-        Long orderIdReceivedLongFormat = Long.parseLong(orderIdReceived);
-        Command command = commandRepository.findById(orderIdReceivedLongFormat)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Command with id " + orderIdReceivedLongFormat + " does not exist"));
-
-        try {
-            String commandJson = objectMapper.writeValueAsString(command);
-            rabbitMQSender.sendOrderToClient(commandJson);
-            return commandJson;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error converting command to JSON", e);
-        }
-    }
-
-
-    public Optional<Command> getProductsByOrderId(String ids) {
-        String[] idArray = ids.split(",");
-        if (idArray.length != 2) {
-            throw new IllegalArgumentException("Invalid format for client and order IDs: " + ids);
-        }
-
-        String a = idArray[0];
-        System.out.println("***************************");
-        System.out.println(a);
-
-        Long clientId = Long.parseLong(a);
-        System.out.println("***************************");
-        System.out.println(clientId);
-        System.out.println("***************************");
-        Long orderId = Long.parseLong(idArray[1]);
-        System.out.println("***************************");
-        System.out.println(orderId);
-        System.out.println("***************************");
-
-        // Logique pour récupérer les produits associés à une commande spécifique
-        Optional<Command> products = commandRepository.findById(orderId);
-        // Logique pour envoyer les produits via RabbitMQ ou autre moyen de communication
-        return products;
-    }
-
     @RabbitListener(queues = "orderQueue")
     public void handleOrderRequest(String orderId) {
         Long orderIdReceivedLongFormat = Long.parseLong(orderId);
@@ -138,12 +96,29 @@ public class CommandService {
                 .orElseThrow(() -> new IllegalStateException(
                         "Command with id " + orderIdReceivedLongFormat + " does not exist"));
 
+        sendProductsId(command.getProductsId());
+
+        try {
+            Thread.sleep(200); // Attendre 1 seconde pour que le message soit reçu. Ajustez selon vos besoins.
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
         try {
             String commandJson = objectMapper.writeValueAsString(command);
-            rabbitMQSender.sendOrderToClient(commandJson);
+            rabbitMQSender.sendOrderToClient(handlProductsToSend());
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Error converting command to JSON", e);
         }
+    }
+
+    private void sendProductsId(String productsId){
+        rabbitMQSender.sendProductsIdToProduct(productsId);
+    }
+
+    private String handlProductsToSend(){
+        return rabbitMQReceiver.getReceivedMessage();
     }
 
 

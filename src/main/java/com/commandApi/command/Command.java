@@ -24,7 +24,8 @@ public class Command {
     private String name;
     private LocalDate creationDate;
     private LocalDate updateDate;
-    private Long clientId;
+    private String clientsId;
+    private String productsId;
 
     public Command() {
     }
@@ -32,11 +33,13 @@ public class Command {
     public Command(String name,
                    LocalDate creationDate,
                    LocalDate updateDate,
-                   Long clientId) {
+                   String clientsId,
+                   String productsId) {
         this.name = name;
         this.creationDate = creationDate;
         this.updateDate = updateDate;
-        this.clientId = clientId;
+        this.clientsId = clientsId;
+        this.productsId = productsId;
     }
 
     public Long getId() {
@@ -47,12 +50,12 @@ public class Command {
         this.id = id;
     }
 
-    public Long getClientId() {
-        return clientId;
+    public String getClientId() {
+        return clientsId;
     }
 
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
+    public void setClientsId(String clientsId) {
+        this.clientsId = clientsId;
     }
 
     public String getName() {
@@ -87,5 +90,9 @@ public class Command {
                 ", creationDate=" + creationDate +
                 ", updateDate=" + updateDate +
                 '}';
+    }
+
+    public String getProductsId() {
+        return productsId;
     }
 }
