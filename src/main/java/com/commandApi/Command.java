@@ -99,4 +99,8 @@ public class Command {
     public String getClientsId() {
         return clientsId;
     }
+
+    public void setProductsId(String productsId1) {
+        this.productsId = productsId1;
+    }
 }

@@ -46,4 +46,22 @@ public class RabbitMQConfig {
     public Queue productToSendQueue() {
         return new Queue("productToSendQueue", false);
     }
+
+    @Bean
+    public Queue clientIdsIdQueue() {
+        return new Queue("clientIdsIdQueue", false);
+    }
+
+    @Bean
+    public Queue responseClientIdsVerificationQueue() {
+        return new Queue("responseClientIdsVerificationQueue", false);
+    }
+    @Bean
+    public Queue productIdsToProductQueue() {
+        return new Queue("productIdsToProductQueue", false);
+    }
+    @Bean
+    public Queue responseProductIdsVerificationQueue() {
+        return new Queue("responseProductIdsVerificationQueue", false);
+    }
 }

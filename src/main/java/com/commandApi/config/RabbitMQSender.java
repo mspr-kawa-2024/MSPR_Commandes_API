@@ -21,5 +21,13 @@ public class RabbitMQSender {
     public void sendProductsIdToProduct(String productsId) {
         rabbitTemplate.convertAndSend("productsIdQueue", productsId);
     }
+
+    public void sendClientIdsToClient(String clientTds) {
+        rabbitTemplate.convertAndSend("clientIdsIdQueue", clientTds);
+    }
+
+    public void sendProductIdsToProduct(String productsTds) {
+        rabbitTemplate.convertAndSend("productIdsToProductQueue", productsTds);
+    }
 }
 

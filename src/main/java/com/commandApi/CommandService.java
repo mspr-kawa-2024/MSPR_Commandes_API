@@ -1,7 +1,5 @@
 package com.commandApi;
 
-import com.commandApi.Command;
-import com.commandApi.CommandRepository;
 import com.commandApi.config.RabbitMQReceiver;
 import com.commandApi.config.RabbitMQSender;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -41,9 +39,12 @@ public class CommandService {
     }
 
 
-    public void addNewCommand(Command command, String clientsId) {
-        command.setClientsId(clientsId);
+    public void addNewCommand(Command command) {
         commandRepository.save(command);
+    }
+
+    public Command saveCommand(Command command) {
+        return commandRepository.save(command);
     }
 
     public void updateCommand(Long commandId, String name) {
@@ -64,28 +65,6 @@ public class CommandService {
         commandRepository.deleteById(commandId);
     }
 
-    public Map<String, Object> getOrderDetailsById(Long orderId) {
-        // Logic to retrieve order details from the database
-        // For the sake of example, returning a mock order details
-        Map<String, Object> orderDetails = new HashMap<>();
-        orderDetails.put("orderId", orderId);
-        orderDetails.put("clientId", 1L); // mock clientId
-        orderDetails.put("orderDescription", "Sample order description");
-        return orderDetails;
-    }
-
-    public String sendProducts() {
-        return "Message of products";
-    }
-
-    @RabbitListener(queues = "orderProductQueue")
-    public Optional<Command> getProductsByOrderId(Long orderId) {
-        // Logique pour récupérer les produits associés à une commande spécifique
-        Optional<Command> products = commandRepository.findById(orderId);
-        // Logique pour envoyer les produits via RabbitMQ ou autre moyen de communication
-        return products;
-    }
-
     @RabbitListener(queues = "orderQueue")
     public void handleOrderRequest(String ids) {
 
@@ -101,9 +80,9 @@ public class CommandService {
                 sendProductsId(command.getProductsId());
 
                 try {
-                    Thread.sleep(200); // Attendre 200ms pour que le message soit reçu. Ajustez selon vos besoins.
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt(); // Restore interrupted status
+                    Thread.currentThread().interrupt();
                     throw new RuntimeException("Thread was interrupted", e);
                 }
 
