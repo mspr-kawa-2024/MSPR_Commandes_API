@@ -1,4 +1,4 @@
-package com.commandApi.command;
+package com.commandApi;
 
 import jakarta.persistence.*;
 
@@ -94,5 +94,9 @@ public class Command {
 
     public String getProductsId() {
         return productsId;
+    }
+
+    public String getClientsId() {
+        return clientsId;
     }
 }

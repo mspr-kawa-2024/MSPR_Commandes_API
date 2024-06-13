@@ -1,5 +1,7 @@
-package com.commandApi.command;
+package com.commandApi;
 
+import com.commandApi.Command;
+import com.commandApi.CommandRepository;
 import com.commandApi.config.RabbitMQReceiver;
 import com.commandApi.config.RabbitMQSender;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -8,13 +10,8 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CommandService {
@@ -90,26 +87,35 @@ public class CommandService {
     }
 
     @RabbitListener(queues = "orderQueue")
-    public void handleOrderRequest(String orderId) {
-        Long orderIdReceivedLongFormat = Long.parseLong(orderId);
-        Command command = commandRepository.findById(orderIdReceivedLongFormat)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Command with id " + orderIdReceivedLongFormat + " does not exist"));
+    public void handleOrderRequest(String ids) {
 
-        sendProductsId(command.getProductsId());
+        Long orderIdReceivedLongFormat = extractOrderId(ids);
+        Optional<Command> optionalCommand = commandRepository.findById(orderIdReceivedLongFormat);
 
-        try {
-            Thread.sleep(200); // Attendre 1 seconde pour que le message soit reçu. Ajustez selon vos besoins.
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        if (optionalCommand.isPresent()) {
+            Command command = optionalCommand.get();
 
+            if (!verificationIfClientHaveTheOrder(command.getClientsId(), extractClientId(ids))) {
+                rabbitMQSender.sendOrderToClient("This client doesn't have that order");
+            } else {
+                sendProductsId(command.getProductsId());
 
-        try {
-            String commandJson = objectMapper.writeValueAsString(command);
-            rabbitMQSender.sendOrderToClient(handlProductsToSend());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error converting command to JSON", e);
+                try {
+                    Thread.sleep(200); // Attendre 200ms pour que le message soit reçu. Ajustez selon vos besoins.
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // Restore interrupted status
+                    throw new RuntimeException("Thread was interrupted", e);
+                }
+
+                try {
+                    String commandJson = objectMapper.writeValueAsString(command);
+                    rabbitMQSender.sendOrderToClient(handlProductsToSend());
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException("Error converting command to JSON", e);
+                }
+            }
+        } else {
+            rabbitMQSender.sendOrderToClient("Command with id " + orderIdReceivedLongFormat + " does not exist");
         }
     }
 
@@ -121,6 +127,24 @@ public class CommandService {
         return rabbitMQReceiver.getReceivedMessage();
     }
 
+    public static Long extractOrderId(String str) {
+        String[] ids = str.split(",");
+        Long orderId = Long.parseLong(ids[1].trim());
+        return orderId;
+    }
 
+    public static String extractClientId(String str) {
+        String[] ids = str.split(",");
+        return ids[0];
+    }
 
+    public boolean verificationIfClientHaveTheOrder(String clientsId, String clientId){
+        String[] ids = clientsId.split(",");
+        for (String id : ids) {
+            if (id.trim().equals(clientId.trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

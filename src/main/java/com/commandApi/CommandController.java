@@ -1,4 +1,4 @@
-package com.commandApi.command;
+package com.commandApi;
 
 import com.commandApi.config.RabbitMQReceiver;
 import com.commandApi.config.RabbitMQSender;
@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * A class to set the control to the user recovered from the database
