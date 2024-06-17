@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CommandController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MSPR_Commandes_API</a> &gt; <a href="index.source.html" class="el_package">com.commandApi</a> &gt; <span class="el_source">CommandController.java</span></div><h1>CommandController.java</h1><pre class="source lang-java linenums">package com.commandApi;
+
+import com.commandApi.config.RabbitMQReceiver;
+import com.commandApi.config.RabbitMQSender;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.StringJoiner;
+
+/**
+ * A class to set the control to the user recovered from the database
+ */
+@RestController
+@RequestMapping(path = &quot;api/v1/command&quot;)
+@CrossOrigin(origins = &quot;http://localhost:3001&quot;,
+        methods = {RequestMethod.GET,
+                RequestMethod.POST,
+                RequestMethod.PUT,
+                RequestMethod.DELETE})
+public class CommandController {
+
+    private final CommandService commandService;
+
+    @Autowired
+    private RabbitMQSender rabbitMQSender;
+
+    @Autowired
+    private RabbitMQReceiver rabbitMQReceiver;
+
+    @Autowired
+<span class="fc" id="L35">    public CommandController(CommandService commandService) {</span>
+<span class="fc" id="L36">        this.commandService = commandService;</span>
+<span class="fc" id="L37">    }</span>
+
+    @GetMapping
+    public List&lt;Command&gt; getCommands() {
+<span class="nc" id="L41">        return commandService.getCommands();</span>
+    }
+
+    @PostMapping
+    public void registerNewCommand(@RequestBody Command command) {
+<span class="nc" id="L46">        commandService.addNewCommand(command);</span>
+<span class="nc" id="L47">    }</span>
+
+    @PostMapping(&quot;/orderId/{id}/clientIds/{clientTds}&quot;)
+    public ResponseEntity&lt;String&gt; associateCommandToSpecificClients(@PathVariable String id,
+                                                                    @PathVariable String clientTds){
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if (!verifierSiIds(clientTds)){</span>
+<span class="nc" id="L53">            return ResponseEntity.ok(&quot;you should put only integers for ids&quot;);</span>
+        }
+<span class="nc" id="L55">        Long commandId = Long.parseLong(id);</span>
+<span class="nc" id="L56">        Command command = commandService.getCommandById(commandId);</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (command == null) {</span>
+<span class="nc" id="L58">            return ResponseEntity.ok(&quot;This order does not exist&quot;);</span>
+        }else {
+<span class="nc" id="L60">            rabbitMQSender.sendClientIdsToClient(clientTds);</span>
+
+            try {
+<span class="nc" id="L63">                Thread.sleep(500);</span>
+<span class="nc" id="L64">            } catch (InterruptedException e) {</span>
+<span class="nc" id="L65">                Thread.currentThread().interrupt();</span>
+<span class="nc" id="L66">                throw new RuntimeException(&quot;Thread was interrupted&quot;, e);</span>
+<span class="nc" id="L67">            }</span>
+
+<span class="nc" id="L69">            String response = rabbitMQReceiver.getReceivedMessageForClientIds();</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">            if (&quot;ok&quot;.equals(response)) {</span>
+<span class="nc" id="L71">                command.setClientsId(supprimerDoublons(command.getClientsId() + &quot;,&quot; + clientTds));</span>
+                //save the order in the bdd
+<span class="nc" id="L73">                command = commandService.saveCommand(command);</span>
+
+<span class="nc" id="L75">                return ResponseEntity.ok(&quot;Clients white ids &quot; + clientTds</span>
+<span class="nc" id="L76">                        + &quot; associated successfly in the order Id &quot; + commandId.toString());</span>
+            }
+<span class="nc" id="L78">            return ResponseEntity.ok(&quot;A client that you set does not exist&quot;);</span>
+        }
+    }
+
+    @PostMapping(&quot;/orderId/{id}/productIds/{productsTds}&quot;)
+    public ResponseEntity&lt;String&gt; associateProductsToTheCommand(@PathVariable String id,
+                                                                @PathVariable String productsTds){
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (!verifierSiIds(productsTds)){</span>
+<span class="nc" id="L86">            return ResponseEntity.ok(&quot;you should put only integers for ids&quot;);</span>
+        }
+<span class="nc" id="L88">        Long commandId = Long.parseLong(id);</span>
+<span class="nc" id="L89">        Command command = commandService.getCommandById(commandId);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (command == null) {</span>
+<span class="nc" id="L91">            return ResponseEntity.ok(&quot;This order does not exist&quot;);</span>
+        }else {
+<span class="nc" id="L93">            rabbitMQSender.sendProductIdsToProduct(productsTds);</span>
+
+            try {
+<span class="nc" id="L96">                Thread.sleep(500);</span>
+<span class="nc" id="L97">            } catch (InterruptedException e) {</span>
+<span class="nc" id="L98">                Thread.currentThread().interrupt();</span>
+<span class="nc" id="L99">                throw new RuntimeException(&quot;Thread was interrupted&quot;, e);</span>
+<span class="nc" id="L100">            }</span>
+
+<span class="nc" id="L102">            String response = rabbitMQReceiver.getReceivedMessageForProductIds();</span>
+<span class="nc" id="L103">            System.out.println(response);</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            if (&quot;ok&quot;.equals(response)) {</span>
+<span class="nc" id="L105">                command.setProductsId(supprimerDoublons(command.getProductsId() + &quot;,&quot; + productsTds));</span>
+                //save the order in the bdd
+<span class="nc" id="L107">                command = commandService.saveCommand(command);</span>
+
+<span class="nc" id="L109">                return ResponseEntity.ok(&quot;Products white ids &quot; + productsTds</span>
+                        + &quot; associated successfly in the Order Id &quot; + id);
+            }
+<span class="nc" id="L112">            return ResponseEntity.ok(&quot;A product that you set does not exist&quot;);</span>
+        }
+    }
+
+    private static String supprimerDoublons(String input) {
+<span class="nc" id="L117">        String[] elements = input.split(&quot;,&quot;);</span>
+<span class="nc" id="L118">        Set&lt;String&gt; uniques = new LinkedHashSet&lt;&gt;();</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        for (String element : elements) {</span>
+<span class="nc" id="L120">            element = element.trim();</span>
+<span class="nc" id="L121">            uniques.add(element);</span>
+        }
+<span class="nc" id="L123">        StringJoiner joiner = new StringJoiner(&quot;, &quot;);</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        for (String element : uniques) {</span>
+<span class="nc" id="L125">            joiner.add(element);</span>
+<span class="nc" id="L126">        }</span>
+<span class="nc" id="L127">        return joiner.toString();</span>
+    }
+
+    private static boolean verifierSiIds(String input) {
+<span class="nc" id="L131">        String[] elements = input.split(&quot;,&quot;);</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        for (String element : elements) {</span>
+<span class="nc" id="L133">            element = element.trim();</span>
+            try {
+<span class="nc" id="L135">                Integer.parseInt(element);</span>
+<span class="nc" id="L136">            } catch (NumberFormatException e) {</span>
+<span class="nc" id="L137">                return false;</span>
+<span class="nc" id="L138">            }</span>
+        }
+<span class="nc" id="L140">        return true;</span>
+    }
+
+    @PutMapping(path = &quot;{commandId}&quot;)
+    public void updateCommand(@PathVariable(&quot;commandId&quot;) Long commandId,
+                              @RequestParam(required = false) String name) {
+<span class="nc" id="L146">        commandService.updateCommand(commandId, name);</span>
+<span class="nc" id="L147">    }</span>
+
+    @DeleteMapping(path = &quot;{commandId}&quot;)
+    public void deleteCommand(@PathVariable(&quot;commandId&quot;) Long commandId) {
+<span class="nc" id="L151">        commandService.deleteCommand(commandId);</span>
+<span class="nc" id="L152">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>
