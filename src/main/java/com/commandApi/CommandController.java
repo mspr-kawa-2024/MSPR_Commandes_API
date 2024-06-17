@@ -46,7 +46,7 @@ public class CommandController {
         commandService.addNewCommand(command);
     }
 
-    @PostMapping("/orderId/{id}/clientIds/{clientTds}")
+    @PutMapping("/orderId/{id}/clientIds/{clientTds}")
     public ResponseEntity<String> associateCommandToSpecificClients(@PathVariable String id,
                                                                     @PathVariable String clientTds){
         if (!verifierSiIds(clientTds)){
@@ -79,7 +79,7 @@ public class CommandController {
         }
     }
 
-    @PostMapping("/orderId/{id}/productIds/{productsTds}")
+    @PutMapping("/orderId/{id}/productIds/{productsTds}")
     public ResponseEntity<String> associateProductsToTheCommand(@PathVariable String id,
                                                                 @PathVariable String productsTds){
         if (!verifierSiIds(productsTds)){

@@ -24,20 +24,44 @@ public class CommandConfig {
                     LocalDate.of(2023, Month.DECEMBER, 1),
                     LocalDate.of(2024, Month.JANUARY, 31),
                     "1,2",
-                    "1,2,3"
+                    "1,2"
             );
 
             Command command2 = new Command(
                     "command2",
                     LocalDate.of(2023, Month.DECEMBER, 1),
                     LocalDate.of(2024, Month.JANUARY, 31),
+                    "1,2",
+                    "3,4"
+            );
+
+            Command command3 = new Command(
+                    "command3",
+                    LocalDate.of(2023, Month.DECEMBER, 1),
+                    LocalDate.of(2024, Month.JANUARY, 31),
                     "1",
-                    "3"
+                    "5"
+            );
+
+            Command command4 = new Command(
+                    "command4",
+                    LocalDate.of(2023, Month.DECEMBER, 1),
+                    LocalDate.of(2024, Month.JANUARY, 31),
+                    "4",
+                    "6,8"
+            );
+
+            Command command5 = new Command(
+                    "command5",
+                    LocalDate.of(2023, Month.DECEMBER, 1),
+                    LocalDate.of(2024, Month.JANUARY, 31),
+                    "4",
+                    ""
             );
 
             // Save Clients into Database
             repository.saveAll(
-                    List.of(command1, command2)
+                    List.of(command1, command2, command3, command4, command5)
             );
         };
     }
