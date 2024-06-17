@@ -42,6 +42,20 @@ public class Command {
         this.productsId = productsId;
     }
 
+    public Command(Long id,
+                   String name,
+                   LocalDate creationDate,
+                   LocalDate updateDate,
+                   String clientsId,
+                   String productsId) {
+        this.id = id;
+        this.name = name;
+        this.creationDate = creationDate;
+        this.updateDate = updateDate;
+        this.clientsId = clientsId;
+        this.productsId = productsId;
+    }
+
     public Long getId() {
         return id;
     }
