@@ -1,7 +1,7 @@
 package com.commandApi.config;
 
-import com.commandApi.Command;
-import com.commandApi.CommandRepository;
+import com.commandApi.model.Order;
+import com.commandApi.repository.OrderRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -16,43 +16,43 @@ import java.util.List;
 public class CommandConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(CommandRepository repository)  {
+    CommandLineRunner commandLineRunner(OrderRepository repository)  {
         // Have access to our repository
         return args -> {
-            Command command1 = new Command(
-                    "command1",
+            Order order1 = new Order(
+                    1L,
                     LocalDate.of(2023, Month.DECEMBER, 1),
                     LocalDate.of(2024, Month.JANUARY, 31),
                     "1,2",
                     "1,2"
             );
 
-            Command command2 = new Command(
-                    "command2",
+            Order order2 = new Order(
+                    2L,
                     LocalDate.of(2023, Month.DECEMBER, 1),
                     LocalDate.of(2024, Month.JANUARY, 31),
                     "1,2",
                     "3,4"
             );
 
-            Command command3 = new Command(
-                    "command3",
+            Order order3 = new Order(
+                    3L,
                     LocalDate.of(2023, Month.DECEMBER, 1),
                     LocalDate.of(2024, Month.JANUARY, 31),
                     "1",
                     "5"
             );
 
-            Command command4 = new Command(
-                    "command4",
+            Order order4 = new Order(
+                    4L,
                     LocalDate.of(2023, Month.DECEMBER, 1),
                     LocalDate.of(2024, Month.JANUARY, 31),
                     "4",
                     "6,8"
             );
 
-            Command command5 = new Command(
-                    "command5",
+            Order order5 = new Order(
+                    5L,
                     LocalDate.of(2023, Month.DECEMBER, 1),
                     LocalDate.of(2024, Month.JANUARY, 31),
                     "4",
@@ -61,7 +61,7 @@ public class CommandConfig {
 
             // Save Clients into Database
             repository.saveAll(
-                    List.of(command1, command2, command3, command4, command5)
+                    List.of(order1, order2, order3, order4, order5)
             );
         };
     }

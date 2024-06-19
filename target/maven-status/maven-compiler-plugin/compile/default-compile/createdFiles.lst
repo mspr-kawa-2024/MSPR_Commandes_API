@@ -1,9 +1,0 @@
-com/commandApi/config/RabbitMQReceiver.class
-com/commandApi/CommandService.class
-com/commandApi/CommandRepository.class
-com/commandApi/config/RabbitMQSender.class
-com/commandApi/Command.class
-com/commandApi/config/CommandConfig.class
-com/commandApi/CommandController.class
-com/commandApi/CommandApplication.class
-com/commandApi/config/RabbitMQConfig.class
