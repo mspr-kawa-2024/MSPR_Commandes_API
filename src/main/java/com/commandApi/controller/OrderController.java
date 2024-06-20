@@ -18,7 +18,8 @@ import java.util.StringJoiner;
 @CrossOrigin(origins = "http://localhost:3001", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class OrderController {
 
-    private final OrderService orderService;
+    @Autowired
+    private OrderService orderService;
 
     @Autowired
     private RabbitMQSender rabbitMQSender;
@@ -33,7 +34,9 @@ public class OrderController {
 
     @GetMapping
     public List<Order> getCommands() {
-        return orderService.getCommands();
+        List<Order> orders = orderService.getCommands();
+        System.out.println("Orders retrieved: " + orders);
+        return orders;
     }
 
     @PostMapping

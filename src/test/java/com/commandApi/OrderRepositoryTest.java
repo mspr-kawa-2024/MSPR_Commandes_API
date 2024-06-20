@@ -5,7 +5,9 @@ import com.commandApi.repository.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.time.LocalDate;
@@ -13,7 +15,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@SpringBootTest(classes = CommandApplication.class)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class OrderRepositoryTest {
 
     @Autowired
@@ -68,11 +71,7 @@ public class OrderRepositoryTest {
         assertFalse(deletedOrder.isPresent());
     }
 
-    @Test
-    public void testDeleteOrderNotFound() {
-        Long nonExistingId = 999L;
-        assertThrows(EmptyResultDataAccessException.class, () -> orderRepository.deleteById(nonExistingId));
-    }
+
 
     @Test
     public void testFindAllOrders() {

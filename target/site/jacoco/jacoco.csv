@@ -1,0 +1,9 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+MSPR_Commandes_API,com.commandApi.model,Order,15,69,0,0,6,26,1,14,1,14
+MSPR_Commandes_API,com.commandApi.controller,OrderController,39,212,6,12,14,53,6,12,0,9
+MSPR_Commandes_API,com.commandApi.config,RabbitMQConfig,0,69,0,0,0,12,0,12,0,12
+MSPR_Commandes_API,com.commandApi.config,CommandConfig,0,99,0,0,0,26,0,4,0,4
+MSPR_Commandes_API,com.commandApi.config,RabbitMQSender,0,33,0,0,0,11,0,6,0,6
+MSPR_Commandes_API,com.commandApi.config,RabbitMQReceiver,0,24,0,0,0,10,0,7,0,7
+MSPR_Commandes_API,com.commandApi,CommandApplication,5,3,0,0,2,1,1,1,1,1
+MSPR_Commandes_API,com.commandApi.service,OrderService,148,62,12,4,36,16,15,7,7,7

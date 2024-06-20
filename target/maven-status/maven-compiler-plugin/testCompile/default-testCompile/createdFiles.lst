@@ -1,0 +1,9 @@
+com\commandApi\OrderControllerTest.class
+com\commandApi\OrderTest.class
+com\commandApi\CommandApiApplicationTests.class
+com\commandApi\RabbitMQConfigTest.class
+com\commandApi\OrderServiceTest.class
+com\commandApi\OrderRepositoryTest.class
+com\commandApi\OrderIntegrationTest.class
+com\commandApi\RabbitMQReceiverTest.class
+com\commandApi\RabbitMQSenderTest.class

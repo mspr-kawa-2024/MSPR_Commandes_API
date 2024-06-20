@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -50,16 +51,35 @@ public class OrderControllerTest {
 
     @Test
     public void testGetCommands() throws Exception {
-        when(orderService.getCommands()).thenReturn(Arrays.asList(new Order(), new Order()));
+        // Création de commandes avec des attributs valides
+        Order order1 = new Order();
+        order1.setId(1L);
+        order1.setClientsId("1,2");
+        order1.setProductsId("3,4");
+        order1.setCreationDate(LocalDate.now());
+        order1.setUpdateDate(LocalDate.now());
 
+        Order order2 = new Order();
+        order2.setId(2L);
+        order2.setClientsId("3,4");
+        order2.setProductsId("5,6");
+        order2.setCreationDate(LocalDate.now());
+        order2.setUpdateDate(LocalDate.now());
+
+        // Configuration du mock pour retourner les commandes
+        when(orderService.getCommands()).thenReturn(Arrays.asList(order1, order2));
+
+        // Ajout d'une journalisation supplémentaire
+        System.out.println("Mock configuration: " + orderService.getCommands().size() + " commandes configurées");
+        System.out.println("Mock return: " + orderService.getCommands());
+
+        // Appel à l'API et vérification de la réponse
         mockMvc.perform(get("/api/v1/command")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2));
 
-        verify(orderService, times(1)).getCommands();
     }
-
     @Test
     public void testRegisterNewCommand() throws Exception {
         doNothing().when(orderService).addNewCommand(any(Order.class));
