@@ -1,7 +1,9 @@
-package com.commandApi;
+package com.commandApi.service;
 
 import com.commandApi.config.RabbitMQReceiver;
 import com.commandApi.config.RabbitMQSender;
+import com.commandApi.model.Command;
+import com.commandApi.repository.CommandRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

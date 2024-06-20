@@ -1,6 +1,6 @@
-package com.commandApi;
+package com.commandApi.repository;
 
-import com.commandApi.Command;
+import com.commandApi.model.Command;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

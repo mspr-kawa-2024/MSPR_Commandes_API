@@ -1,7 +1,7 @@
 package com.commandApi.config;
 
-import com.commandApi.Command;
-import com.commandApi.CommandRepository;
+import com.commandApi.model.Command;
+import com.commandApi.repository.CommandRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,9 @@
-package com.commandApi;
+package com.commandApi.controller;
 
+import com.commandApi.service.CommandService;
 import com.commandApi.config.RabbitMQReceiver;
 import com.commandApi.config.RabbitMQSender;
+import com.commandApi.model.Command;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

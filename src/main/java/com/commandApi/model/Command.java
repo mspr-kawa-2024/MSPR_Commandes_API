@@ -1,4 +1,4 @@
-package com.commandApi;
+package com.commandApi.model;
 
 import jakarta.persistence.*;
 
