@@ -1,9 +1,9 @@
+/Users/med/Desktop/EPSI/mspr2/MSPR_Commandes_API/src/main/java/com/commandApi/repository/CommandRepository.java
 /Users/med/Desktop/EPSI/mspr2/MSPR_Commandes_API/src/main/java/com/commandApi/config/RabbitMQSender.java
 /Users/med/Desktop/EPSI/mspr2/MSPR_Commandes_API/src/main/java/com/commandApi/config/RabbitMQReceiver.java
-/Users/med/Desktop/EPSI/mspr2/MSPR_Commandes_API/src/main/java/com/commandApi/CommandRepository.java
 /Users/med/Desktop/EPSI/mspr2/MSPR_Commandes_API/src/main/java/com/commandApi/CommandApplication.java
 /Users/med/Desktop/EPSI/mspr2/MSPR_Commandes_API/src/main/java/com/commandApi/config/CommandConfig.java
-/Users/med/Desktop/EPSI/mspr2/MSPR_Commandes_API/src/main/java/com/commandApi/CommandService.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Commandes_API/src/main/java/com/commandApi/controller/CommandController.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Commandes_API/src/main/java/com/commandApi/model/Command.java
 /Users/med/Desktop/EPSI/mspr2/MSPR_Commandes_API/src/main/java/com/commandApi/config/RabbitMQConfig.java
-/Users/med/Desktop/EPSI/mspr2/MSPR_Commandes_API/src/main/java/com/commandApi/Command.java
-/Users/med/Desktop/EPSI/mspr2/MSPR_Commandes_API/src/main/java/com/commandApi/CommandController.java
+/Users/med/Desktop/EPSI/mspr2/MSPR_Commandes_API/src/main/java/com/commandApi/service/CommandService.java

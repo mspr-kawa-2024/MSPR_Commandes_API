@@ -1,6 +1,5 @@
-package com.commandApi;
+package com.commandApi.model;
 
-import com.commandApi.model.Command;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

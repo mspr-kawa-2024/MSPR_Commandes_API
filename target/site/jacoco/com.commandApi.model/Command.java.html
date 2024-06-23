@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Command.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">MSPR_Commandes_API</a> &gt; <a href="index.source.html" class="el_package">com.commandApi.model</a> &gt; <span class="el_source">Command.java</span></div><h1>Command.java</h1><pre class="source lang-java linenums">package com.commandApi.model;
+
+import jakarta.persistence.*;
+
+import java.time.LocalDate;
+
+//for hibernate
+@Entity
+//for database
+@Table
+public class Command {
+
+    @Id
+    @SequenceGenerator(
+            name = &quot;command_sequence&quot;,
+            sequenceName = &quot;command_sequence&quot;,
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = &quot;command_sequence&quot;
+    )
+    private Long id;
+    private String name;
+    private LocalDate creationDate;
+    private LocalDate updateDate;
+    private String clientsId;
+    private String productsId;
+
+<span class="fc" id="L30">    public Command() {</span>
+<span class="fc" id="L31">    }</span>
+
+    public Command(String name,
+                   LocalDate creationDate,
+                   LocalDate updateDate,
+                   String clientsId,
+<span class="nc" id="L37">                   String productsId) {</span>
+<span class="nc" id="L38">        this.name = name;</span>
+<span class="nc" id="L39">        this.creationDate = creationDate;</span>
+<span class="nc" id="L40">        this.updateDate = updateDate;</span>
+<span class="nc" id="L41">        this.clientsId = clientsId;</span>
+<span class="nc" id="L42">        this.productsId = productsId;</span>
+<span class="nc" id="L43">    }</span>
+
+    public Command(Long id,
+                   String name,
+                   LocalDate creationDate,
+                   LocalDate updateDate,
+                   String clientsId,
+<span class="fc" id="L50">                   String productsId) {</span>
+<span class="fc" id="L51">        this.id = id;</span>
+<span class="fc" id="L52">        this.name = name;</span>
+<span class="fc" id="L53">        this.creationDate = creationDate;</span>
+<span class="fc" id="L54">        this.updateDate = updateDate;</span>
+<span class="fc" id="L55">        this.clientsId = clientsId;</span>
+<span class="fc" id="L56">        this.productsId = productsId;</span>
+<span class="fc" id="L57">    }</span>
+
+    public Long getId() {
+<span class="nc" id="L60">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L64">        this.id = id;</span>
+<span class="fc" id="L65">    }</span>
+
+    public String getClientId() {
+<span class="nc" id="L68">        return clientsId;</span>
+    }
+
+    public void setClientsId(String clientsId) {
+<span class="fc" id="L72">        this.clientsId = clientsId;</span>
+<span class="fc" id="L73">    }</span>
+
+    public String getName() {
+<span class="nc" id="L76">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="fc" id="L80">        this.name = name;</span>
+<span class="fc" id="L81">    }</span>
+
+    public LocalDate getCreationDate() {
+<span class="nc" id="L84">        return creationDate;</span>
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+<span class="fc" id="L88">        this.creationDate = creationDate;</span>
+<span class="fc" id="L89">    }</span>
+
+    public LocalDate getUpdateDate() {
+<span class="nc" id="L92">        return updateDate;</span>
+    }
+
+    public void setUpdateDate(LocalDate updateDate) {
+<span class="fc" id="L96">        this.updateDate = updateDate;</span>
+<span class="fc" id="L97">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L101">        return &quot;Command{&quot; +</span>
+                &quot;id=&quot; + id +
+                &quot;, name='&quot; + name + '\'' +
+                &quot;, creationDate=&quot; + creationDate +
+                &quot;, updateDate=&quot; + updateDate +
+                '}';
+    }
+
+    public String getProductsId() {
+<span class="nc" id="L110">        return productsId;</span>
+    }
+
+    public String getClientsId() {
+<span class="nc" id="L114">        return clientsId;</span>
+    }
+
+    public void setProductsId(String productsId1) {
+<span class="fc" id="L118">        this.productsId = productsId1;</span>
+<span class="fc" id="L119">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>
