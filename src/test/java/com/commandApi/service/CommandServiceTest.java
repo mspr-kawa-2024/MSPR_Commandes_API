@@ -39,12 +39,14 @@ public class CommandServiceTest {
 
     private Command command;
 
+
+
     @BeforeEach
     void setUp() {
         command = new Command();
         command.setId(1L);
         command.setName("Test Command");
-        command.setClientsId("1,2,3");
+        command.setClientsId("1,2,3");  // Définissez une valeur pour clientsId
         command.setProductsId("101,102");
     }
 

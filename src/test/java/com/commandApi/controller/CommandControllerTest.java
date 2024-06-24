@@ -15,6 +15,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
+import static com.commandApi.controller.CommandController.supprimerDoublons;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -97,4 +99,104 @@ public class CommandControllerTest {
                 .andExpect(status().isOk());
         verify(commandService, times(1)).deleteCommand(1L);
     }
+
+    @Test
+    void testSupprimerDoublons() {
+        String input = "1, 2, 2, 3, 4, 4, 4, 5";
+        String expected = "1, 2, 3, 4, 5";
+        String actual = supprimerDoublons(input);
+        assertEquals(expected, actual);
+
+        input = " a , b , c , a , b ";
+        expected = "a, b, c";
+        actual = supprimerDoublons(input);
+        assertEquals(expected, actual);
+
+        input = "single";
+        expected = "single";
+        actual = supprimerDoublons(input);
+        assertEquals(expected, actual);
+
+        input = " , , , ";
+        expected = "";
+        actual = supprimerDoublons(input);
+        assertEquals(expected, actual);
+
+        input = "1, 2, 3, 1, 4, 5, 6, 3, 7, 8, 9, 7";
+        expected = "1, 2, 3, 4, 5, 6, 7, 8, 9";
+        actual = supprimerDoublons(input);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void testAssociateCommandToSpecificClientsOrderNotFound() throws Exception {
+        when(commandService.getCommandById(anyLong())).thenReturn(null);
+
+        mockMvc.perform(put("/api/v1/command/orderId/1/clientIds/1,2,3"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("This order does not exist"));
+    }
+
+    @Test
+    void testAssociateProductsToTheCommandOrderNotFound() throws Exception {
+        when(commandService.getCommandById(anyLong())).thenReturn(null);
+
+        mockMvc.perform(put("/api/v1/command/orderId/1/productIds/101,102"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("This order does not exist"));
+    }
+
+    /*
+    @Test
+    void testThreadSleepAndRabbitMQReceiverSuccess() throws Exception {
+        when(commandService.getCommandById(1L)).thenReturn(command);
+        when(rabbitMQReceiver.getReceivedMessageForClientIds()).thenReturn("ok");
+
+        mockMvc.perform(put("/api/v1/command/orderId/1/clientIds/4,5"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Clients white ids 4,5 associated successfly in the order Id 1"));
+
+        verify(commandService, times(1)).getCommandById(1L);
+        verify(rabbitMQSender, times(1)).sendClientIdsToClient("4,5");
+        verify(rabbitMQReceiver, times(1)).getReceivedMessageForClientIds();
+        verify(commandService, times(1)).saveCommand(any(Command.class));
+    }
+
+    @Test
+    void testThreadSleepAndRabbitMQReceiverFailure() throws Exception {
+        when(commandService.getCommandById(1L)).thenReturn(command);
+        when(rabbitMQReceiver.getReceivedMessageForClientIds()).thenReturn("not_ok");
+
+        mockMvc.perform(put("/api/v1/command/orderId/1/clientIds/4,5"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("A client that you set does not exist"));
+
+        verify(commandService, times(1)).getCommandById(1L);
+        verify(rabbitMQSender, times(1)).sendClientIdsToClient("4,5");
+        verify(rabbitMQReceiver, times(1)).getReceivedMessageForClientIds();
+        verify(commandService, times(0)).saveCommand(any(Command.class));
+    }
+
+    @Test
+    void testThreadInterruptedException() throws Exception {
+        when(commandService.getCommandById(1L)).thenReturn(command);
+        // Simuler une interruption du thread
+        doAnswer(invocation -> {
+            Thread.sleep(500);
+            Thread.currentThread().interrupt();
+            throw new InterruptedException();
+        }).when(rabbitMQReceiver).getReceivedMessageForClientIds();
+
+        mockMvc.perform(put("/api/v1/command/orderId/1/clientIds/4,5"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(result -> {
+                    Throwable resolvedException = result.getResolvedException();
+                    assert resolvedException instanceof RuntimeException;
+                    assert resolvedException.getMessage().contains("Thread was interrupted");
+                });
+
+        verify(commandService, times(1)).getCommandById(1L);
+        verify(rabbitMQSender, times(1)).sendClientIdsToClient("4,5");
+    }*/
+
 }

@@ -115,7 +115,7 @@ public class CommandController {
         }
     }
 
-    private static String supprimerDoublons(String input) {
+    public static String supprimerDoublons(String input) {
         String[] elements = input.split(",");
         Set<String> uniques = new LinkedHashSet<>();
         for (String element : elements) {

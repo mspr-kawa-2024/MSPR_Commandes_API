@@ -14,10 +14,6 @@ public class RabbitMQSender {
         rabbitTemplate.convertAndSend("orderToSendQueue", order);
     }
 
-    public void sendOrderToProduct(String orderId) {
-        rabbitTemplate.convertAndSend("orderToSendQueue", orderId);
-    }
-
     public void sendProductsIdToProduct(String productsId) {
         rabbitTemplate.convertAndSend("productsIdQueue", productsId);
     }
