@@ -4,6 +4,12 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
+/**
+ * Classe de configuration pour les files RabbitMQ utilisées dans l'API Commande.
+ * Cette classe définit et initialise diverses files qui seront utilisées pour la communication
+ * de messages entre les différentes parties du système.
+ */
 @Configuration
 public class RabbitMQConfig {
 

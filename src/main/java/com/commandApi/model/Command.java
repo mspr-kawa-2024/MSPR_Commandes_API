@@ -4,6 +4,14 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+/**
+ * La classe Command représente une commande dans le système.
+ * Elle utilise les annotations JPA pour le mapping objet-relationnel.
+ * Cette classe définit les attributs d'une commande, y compris son identifiant,
+ * son nom, ses dates de création et de mise à jour, ainsi que les identifiants
+ * des clients et des produits associés.
+ */
+
 //for hibernate
 @Entity
 //for database

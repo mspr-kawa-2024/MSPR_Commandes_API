@@ -14,7 +14,21 @@ import java.util.Set;
 import java.util.StringJoiner;
 
 /**
- * A class to set the control to the user recovered from the database
+ * Controlleur CommandController
+ *
+ * Cette classe est un contrôleur Spring REST qui gère les requêtes HTTP pour l'API Commande.
+ * Elle fournit des points de terminaison pour créer, lire, mettre à jour et supprimer des commandes.
+ * Elle intègre également l'envoi et la réception de messages via RabbitMQ pour associer des clients
+ * et des produits aux commandes.
+ *
+ * - getCommands : Récupère toutes les commandes.
+ * - registerNewCommand : Enregistre une nouvelle commande.
+ * - associateCommandToSpecificClients : Associe des clients spécifiques à une commande en envoyant un message RabbitMQ et en vérifiant la réponse.
+ * - associateProductsToTheCommand : Associe des produits spécifiques à une commande en envoyant un message RabbitMQ et en vérifiant la réponse.
+ * - updateCommand : Met à jour les informations d'une commande existante.
+ * - deleteCommand : Supprime une commande existante.
+ * - supprimerDoublons : Méthode utilitaire pour supprimer les doublons dans une chaîne de caractères.
+ * - verifierSiIds : Méthode utilitaire pour vérifier si les identifiants fournis sont bien des entiers.
  */
 @RestController
 @RequestMapping(path = "api/v1/command")
@@ -48,6 +62,13 @@ public class CommandController {
         commandService.addNewCommand(command);
     }
 
+    /**
+     * Associe des clients spécifiques à une commande.
+     *
+     * @param id L'identifiant de la commande.
+     * @param clientTds Les identifiants des clients à associer.
+     * @return La réponse HTTP indiquant le résultat de l'opération.
+     */
     @PutMapping("/orderId/{id}/clientIds/{clientTds}")
     public ResponseEntity<String> associateCommandToSpecificClients(@PathVariable String id,
                                                                     @PathVariable String clientTds){

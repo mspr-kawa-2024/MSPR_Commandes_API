@@ -13,6 +13,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+/**
+ * La classe CommandService gère les opérations de la commande, y compris
+ * la création, la mise à jour, la suppression et la récupération des commandes.
+ * Elle intègre également la communication avec RabbitMQ pour envoyer et recevoir
+ * des messages liés aux commandes.
+ */
 @Service
 public class CommandService {
 
@@ -67,6 +73,10 @@ public class CommandService {
         commandRepository.deleteById(commandId);
     }
 
+    /**
+     * Gère les requêtes de commande reçues via RabbitMQ.
+     * @param ids la chaîne contenant les IDs de la commande et du client.
+     */
     @RabbitListener(queues = "orderQueue")
     public void handleOrderRequest(String ids) {
 
