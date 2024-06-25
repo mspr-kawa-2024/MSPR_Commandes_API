@@ -5,6 +5,21 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+/**
+ * Service RabbitMQReceiver
+ *
+ * Cette classe est un service Spring chargé de recevoir et traiter les messages
+ * provenant de différentes files RabbitMQ. Elle utilise RabbitTemplate pour
+ * interagir avec RabbitMQ et RabbitListener pour écouter les messages des files
+ * spécifiées.
+ *
+ * - receiveProductOfOrder : écoute la file "productToSendQueue" et stocke le message reçu.
+ * - receiveResponseForClientIdsVerification : écoute la file "responseClientIdsVerificationQueue" et stocke le message reçu.
+ * - responseProductIdsVerificationQueue : écoute la file "responseProductIdsVerificationQueue" et stocke le message reçu.
+ *
+ * Les méthodes getter permettent de récupérer les messages reçus pour un traitement ultérieur.
+ */
 @Service
 public class RabbitMQReceiver {
 
